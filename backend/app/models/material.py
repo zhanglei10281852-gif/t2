@@ -7,7 +7,7 @@ class Material(Base):
     __tablename__ = "materials"
 
     id = Column(Integer, primary_key=True, index=True)
-    code = Column(String(50), unique=True, index=True, nullable=False)
+    code = Column(String(50), index=True, nullable=False)
     name = Column(String(100), nullable=False)
     category = Column(String(50), nullable=False)
     specification = Column(String(200))

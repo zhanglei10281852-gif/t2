@@ -1,10 +1,24 @@
-import React, { useState, useEffect } from 'react';
-import { Row, Col, Card, Statistic, Progress, Badge } from 'antd';
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
-import { statisticsApi, alertApi } from '../services/api';
-import { WarehouseStats, CategoryData } from '../types';
+import React, { useState, useEffect } from "react";
+import { Row, Col, Card, Statistic, Progress, Badge } from "antd";
+import {
+  PieChart,
+  Pie,
+  Cell,
+  ResponsiveContainer,
+  Tooltip,
+  Legend,
+} from "recharts";
+import { statisticsApi, alertApi } from "../services/api";
+import { WarehouseStats, CategoryData } from "../types";
 
-const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#82ca9d'];
+const COLORS = [
+  "#0088FE",
+  "#00C49F",
+  "#FFBB28",
+  "#FF8042",
+  "#8884d8",
+  "#82ca9d",
+];
 
 const Dashboard: React.FC = () => {
   const [warehouseStats, setWarehouseStats] = useState<WarehouseStats[]>([]);
@@ -31,7 +45,7 @@ const Dashboard: React.FC = () => {
       setTotalValue(valRes.data.total_value);
       setAlertCount(alertRes.data.count);
     } catch (error) {
-      console.error('获取仪表盘数据失败:', error);
+      console.error("获取仪表盘数据失败:", error);
     } finally {
       setLoading(false);
     }
@@ -40,7 +54,7 @@ const Dashboard: React.FC = () => {
   return (
     <div>
       <h2>物资总览仪表盘</h2>
-      
+
       <Row gutter={[16, 16]} style={{ marginBottom: 24 }}>
         <Col span={6}>
           <Card loading={loading}>
@@ -63,7 +77,7 @@ const Dashboard: React.FC = () => {
                 </span>
               }
               value={alertCount}
-              valueStyle={{ color: alertCount > 0 ? '#cf1322' : '#3f8600' }}
+              valueStyle={{ color: alertCount > 0 ? "#cf1322" : "#3f8600" }}
             />
           </Card>
         </Col>
@@ -98,11 +112,15 @@ const Dashboard: React.FC = () => {
                       <strong>{wh.warehouse_name}</strong>
                     </div>
                     <Progress
-                      percent={Math.min(wh.usage_rate, 100)}
-                      status={wh.usage_rate > 80 ? 'exception' : 'active'}
+                      percent={
+                        Math.round(Math.min(wh.usage_rate, 100) * 100) / 100
+                      }
+                      status={wh.usage_rate > 80 ? "exception" : "active"}
+                      format={(percent) => `${percent?.toFixed(2)}%`}
                     />
-                    <div style={{ fontSize: 12, color: '#666' }}>
-                      已用容量: {wh.used_capacity.toFixed(1)} m² / 总容量: {wh.total_capacity} m²
+                    <div style={{ fontSize: 12, color: "#666" }}>
+                      已用容量: {wh.used_capacity.toFixed(1)} m² / 总容量:{" "}
+                      {wh.total_capacity} m²
                     </div>
                   </div>
                 </Col>
@@ -125,7 +143,10 @@ const Dashboard: React.FC = () => {
                     label
                   >
                     {categoryData.map((_, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={COLORS[index % COLORS.length]}
+                      />
                     ))}
                   </Pie>
                   <Tooltip />
