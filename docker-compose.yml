@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: emergency-backend
+    ports:
+      - "8459:8459"
+    volumes:
+      - ./backend:/app
+      - backend-data:/app/data
+    restart: unless-stopped
+    command: sh -c "python init_data.py && uvicorn app.main:app --host 0.0.0.0 --port 8459 --reload"
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: emergency-frontend
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  backend-data:
